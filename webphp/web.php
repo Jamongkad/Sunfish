@@ -70,10 +70,15 @@ function serve($c, $m, $a = array(), $e = TRUE) {
 	// $e = TRUE or FALSE. TRUE => evals the statement
 	if (($m = strtolower($m)) == 'post') $a[] = '$_POST';
 	$s = $c .'::'. $m .'('. join(',', $a) .');';
-	if (method_exists($c, $m))
-		if ($e == TRUE) eval($s);
-		else return $s;
-	else r(501, $stat[501]);
+	if (method_exists($c, $m)) {
+		if ($e == TRUE) {
+            eval($s);
+		} else {
+            return $s;
+        }
+	} else {
+        r(501, $stat[501]);
+    }
 }
 
 // This matches the URL and runs the appropriate controller's method
