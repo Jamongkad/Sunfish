@@ -70,15 +70,19 @@ function serve($c, $m, $a = array(), $e = TRUE) {
 	// $e = TRUE or FALSE. TRUE => evals the statement
 	if (($m = strtolower($m)) == 'post') $a[] = '$_POST';
 	$s = $c .'::'. $m .'('. join(',', $a) .');';
+
 	if (method_exists($c, $m)) {
 		if ($e == TRUE) {
-            eval($s);
+          //lets try this instead of evaling...
+          call_user_func_array(array($c, $m), str_replace('"', '', $a));
+          //eval($s);
 		} else {
             return $s;
         }
 	} else {
         r(501, $stat[501]);
     }
+
 }
 
 // This matches the URL and runs the appropriate controller's method
@@ -87,18 +91,21 @@ function run($urls) {
 
 	foreach ($urls as $r => $c) {
 		// $r, $c, $m = route, controller, matches
-		preg_match('/^'.str_replace('/', '\/', $r).'$/', $url, $m);
-
+        $route = str_replace('/', '\/', $r);
+		preg_match('/^'.$route.'$/', $url, $m);
+        
 		if (count($m) > 0) {
 			array_shift($m); // Rid $m[0] (the matching URL)
+            //This is just for placing double-quotes.
 			foreach ($m as &$i) $i = '"'. $i .'"';
 			serve($c, (in_array($_S['REQUEST_METHOD'], array(
 				'POST', 'GET', 'DELETE', 'PUT'))?
 				$_S['REQUEST_METHOD']:'GET'), $m);
-			return;
-		} // else it isn't a match so go to the next item in array
+			return;         
+		} // else it isn't a match so go to the next item in array 
+
 	}
 	// If the code reaches this point, there was no match
 	die('not found');
 }
-
+?>
