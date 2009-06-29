@@ -1,5 +1,6 @@
 <?php
 require_once 'sunfish_core/core.php';
+require_once 'h2o-php/h2o.php';
 
 $urls = Array(
     '/(.*)' => 'Index',
@@ -12,7 +13,11 @@ routes($urls);
 
 class Index {
     public function GET() {
-        echo "Hello Marie I love yoU!";
+        $view = new h2o('views/index.html');
+        $person = Array(
+            'name' => 'Mathew'
+        );
+        echo $view->render(compact('person'));
     }
 }
 

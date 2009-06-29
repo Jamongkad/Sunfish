@@ -2,13 +2,14 @@
 require_once 'sunfish_core/core.php';
 
 $urls = Array( 
-    '/(.*)' => 'Index',
-    '/event/read/(\d+)' => 'Read'
+    '/(.*)' => 'Event',
+    '/event/read/(\d+)' => 'Read',
+    '/event/hello/(\w+)/(\d+)/(\w+)' => 'Hello'
 );
 
 routes($urls);
 
-class Index {
+class Event {
     public function GET() {
        echo "Hello from Events controller!";
     }
@@ -16,7 +17,13 @@ class Index {
 
 class Read { 
     public function GET($id) {
-       echo "reading at id : $id";
+        echo "reading at id : $id";
+    }
+}
+
+class Hello {
+    public function GET($word, $id, $phrase) {
+        echo "Sprocket Fish $word $id $phrase";
     }
 }
 
